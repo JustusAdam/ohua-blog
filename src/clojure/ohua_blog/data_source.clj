@@ -1,5 +1,6 @@
 (ns ohua-blog.data-source)
 
+(defrecord PostInfo [id topic author])
 
 (defn fetch [target & args]
   (case target
