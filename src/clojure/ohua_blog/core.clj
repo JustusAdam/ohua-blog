@@ -1,58 +1,68 @@
 (ns ohua-blog.core
-  (:require [ohua-blog.data-source :refer [fetch]])
-  (:require [ohua-blog.render :refer :all]))
+  (:require [com.ohua.logging :as l]
+            [ohua-blog.render]
+            [com.ohua.transform.clojure-code :as cc])
+  (:use [com.ohua.compile]))
 
-(defmacro get-post-ids []
-  `(fetch :post-ids))
+(import com.ohua_blog.types.FetchType)
+(import com.ohua_blog.types.PostInfo)
+
+(cc/disable-capture)
+
+(ohua :import [com.ohua_blog.functions])
+
+(defmacro get-post-ids [id]
+  `(com.ohua_blog.functions.fetch FetchType/PostIds id))
 
 (defmacro get-post-info [id]
-  `(fetch :post-info ~id))
+  `(com.ohua_blog.functions.fetch FetchType/PostContent ~id))
 
 (defmacro get-post-content [id]
-  `(fetch :post-content ~id))
+  `(com.ohua_blog.functions.fetch FetchType/PostContent ~id))
 
 (defmacro get-post-views [id]
-  `(fetch :post-views ~id))
+  `(com.ohua_blog.functions.fetch FetchType/PostViews ~id))
 
 (defmacro get-post-details [id]
   `[(get-post-info ~id) (get-post-content ~id)])
 
-(defmacro get-all-posts-info []
-  `(map #(get-post-info %) (get-post-ids)))
+(defmacro get-all-posts-info [id]
+  `(com.ohua.lang/smap (fn [a] (get-post-info a)) (get-post-ids id)))
 
-(defmacro topics []
-  `(let [posts# (get-all-posts-info)
-         topic-counts# (frequencies (map :topic posts#))]
-    (render-topics topic-counts#)))
+(defmacro topics [id]
+  `(let [posts# (get-all-posts-info id)
+         topic-counts# (frequencies (map (fn [a] (.getTopic a)) posts#))]
+    (ohua-blog.render/render-topics topic-counts#)))
 
-(defmacro popular-posts []
-  `(let [pids# (map #([% (get-post-views %)]) (get-post-ids))
-         ordered# (->> pids#
-                    (sort-by last >)
-                    (take 5))
+(defmacro popular-posts [id]
+  `(let [pids# (com.ohua.lang/smap (fn [post#] [post# (get-post-views post#)]) (get-post-ids id))
+         ordered# (take 5 (sort-by last > pids#))
          content# (map (fn [[a# b#]] [(get-post-details a#) b#]) ordered#)]
-    (render-popular-posts content#)))
+    (ohua-blog.render/render-popular-posts content#)))
 
-(defmacro left-pane []
-  `(render-side-pane (popular-posts) (topics)))
+(defmacro left-pane [id]
+  `(ohua-blog.render/render-side-pane (popular-posts id) (topics id)))
 
-(defmacro main-pane []
-  `(let [posts# (get-all-posts-info)
-         ordered# (->> posts#
-                    (sort-by :date)
-                    (take 5))
-         content# (map
-                    #(->> %
-                      :id
-                      get-post-content)
+(defmacro main-pane [id]
+  `(let [posts# (get-all-posts-info id)
+         ordered# (take 5 (sort-by :date posts#))
+         content# (com.ohua.lang/smap
+                    (fn [a] (->> a
+                                :id
+                                get-post-content))
                     ordered#)]
-    (render-main-panel (map vector ordered# content#))))
-
-(defmacro blog []
-  "Main entry point"
-  `(render-page (left-pane) (main-pane)))
+    (ohua-blog.render/render-main-panel (map vector ordered# content#))))
 
 (use 'clojure.pprint)
 (use 'clojure.walk)
 
-(def -main (pprint (macroexpand-all '(blog))))
+(defn -main []
+  (do
+    (l/enable-compilation-logging)
+    (pprint (macroexpand-all `(com.ohua.compile/ohua
+                                (com.ohua.lang/smap (fn [id]
+                                        (ohua-blog.render/render-page (left-pane id) (main-pane id))) [2])))))
+  ;(print (blog 3) )
+  ;(ohua
+  ;  (smap blog [1 2 3]))
+)

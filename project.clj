@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Revised BSD License"
             :url "https://opensource.org/licenses/BSD-3-Clause"}
-  :dependencies [[org.clojure/clojure "1.6.0"] [ohua/ohua "0.3.1"]]
+  :dependencies [[org.clojure/clojure "1.6.0"] [ohua/ohua "0.3.4"]]
   :main ^:skip-aot ohua-blog.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}

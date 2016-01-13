@@ -19,11 +19,8 @@
   (reduce (fn [m [info c]] (assoc m (:id info) (rand-int 100))) {} posts))
 
 (defn fetch
-   ([type]
-    (case type
-      :post-ids post-ids))
-   ([type id]
-    (case type
-      :post-content (get post-contents id)
-      :post-info (get post-infos id)
-      :post-views (get post-views id))))
+  [type id]
+  (case type
+    :post-content (get post-contents id)
+    :post-info (get post-infos id)
+    :post-views (get post-views id)))

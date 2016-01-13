@@ -1,11 +1,14 @@
 (ns ohua-blog.render
   (:require [clojure.string :refer [join]]))
 
+(import com.ohua_blog.types.PostInfo)
+
+
 (defn render-topics [topics]
   (str "Topics:\n" (join "\n" (map str topics))))
 
 (defn render-post-list [posts]
-  (join "\n" (map #(str "Post " (:id (first %))) posts)))
+  (join "\n" (map #(str "Post " (.getId (first %))) posts)))
 
 (defn render-side-pane [posts topics]
   (str "Side panel\n" posts "\n" topics))
@@ -19,4 +22,4 @@
   (str pane "\n" content))
 
 (defn render-popular-posts [posts]
-  (join "\n" (map (fn [[[info content] views]] (str (:id info) " Views: " views)))))
+  (join "\n" (map (fn [[[info content] views]] (str (.getId info) " Views: " views)) posts)))
