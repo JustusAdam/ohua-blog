@@ -27,11 +27,11 @@
   `[(get-post-info ~id) (get-post-content ~id)])
 
 (defmacro get-all-posts-info [id]
-  `(com.ohua.lang/smap (fn [a] (get-post-info a)) (get-post-ids id)))
+  `(com.ohua.lang/smap (fn [a#] (get-post-info a#)) (get-post-ids id)))
 
 (defmacro topics [id]
   `(let [posts# (get-all-posts-info id)
-         topic-counts# (frequencies (map (fn [a] (.getTopic a)) posts#))]
+         topic-counts# (frequencies (map (fn [a#] (.getTopic a#)) posts#))]
     (ohua-blog.render/render-topics topic-counts#)))
 
 (defmacro popular-posts [id]
@@ -45,10 +45,10 @@
 
 (defmacro main-pane [id]
   `(let [posts# (get-all-posts-info id)
-         ordered# (take 5 (sort-by :date posts#))
+         ordered# (take 5 (sort-by (fn [post#] (.getDate post#)) posts#))
          content# (com.ohua.lang/smap
-                    (fn [a] (->> a
-                                :id
+                    (fn [a#] (->> a#
+                                (fn [b#] (.getId b#))
                                 get-post-content))
                     ordered#)]
     (ohua-blog.render/render-main-panel (map vector ordered# content#))))
@@ -60,8 +60,8 @@
   (do
     (l/enable-compilation-logging)
     (pprint (macroexpand-all `(com.ohua.compile/ohua
-                                (com.ohua.lang/smap (fn [id]
-                                        (ohua-blog.render/render-page (left-pane id) (main-pane id))) [2])))))
+                                (com.ohua.lang/smap (fn [id#]
+                                        (ohua-blog.render/render-page (left-pane id#) (main-pane id#))) [2])))))
   ;(print (blog 3) )
   ;(ohua
   ;  (smap blog [1 2 3]))

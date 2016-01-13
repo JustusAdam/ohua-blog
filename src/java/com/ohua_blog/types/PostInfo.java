@@ -1,5 +1,7 @@
 package com.ohua_blog.types;
 
+import java.util.Date;
+
 /**
  * Created by justusadam on 13/01/16.
  */
@@ -7,6 +9,7 @@ public class PostInfo {
     private int id;
     private String topic;
     private String author;
+    private Date date;
 
     public int getId() {
         return id;
@@ -30,5 +33,13 @@ public class PostInfo {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
