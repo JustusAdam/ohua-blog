@@ -3,7 +3,9 @@ package com.ohua_blog.functions;
 import com.ohua.lang.Function;
 import com.ohua_blog.types.FetchType;
 import com.ohua_blog.types.PostInfo;
+import ohua_blog.render.Render;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,28 +15,40 @@ import java.util.stream.Collectors;
  */
 public class Fetch {
 
+    private static void __test () {
+        Render r = new Render();
+        r.renderMainPane(new ArrayList<>());
+    }
+
     private static HashMap<Integer, PostInfo> postMap;
     private static HashMap<Integer, Integer> viewMap;
     private static HashMap<Integer, String> contentMap;
 
     @Function
-    public Object fetch (FetchType type, int id) {
+    public Object[] fetch (FetchType type, int id) {
+        Object res;
         switch (type) {
             case PostIds:
-                return fetchPostIds();
+                res = (Object) fetchPostIds();
+                break;
             case PostContent:
-                return fetchPostContent(id);
+                res = (Object) fetchPostContent(id);
+                break;
             case PostInfo:
-                return fetchPostInfo(id);
+                res = (Object) fetchPostInfo(id);
+                break;
             case PostViews:
-                return fetchPostViews(id);
+                res = (Object) fetchPostViews(id);
+                break;
             default:
-                return null;
+                res = null;
         }
+        return new Object[] { res };
     }
 
     private List<Integer> fetchPostIds() {
-        return postMap.keySet().stream().collect(Collectors.toList());
+        return new ArrayList<Integer>(postMap.keySet());
+//        return postMap.keySet().stream().collect(Collectors.toList());
     }
 
     private PostInfo fetchPostInfo (int id) {
