@@ -3,41 +3,34 @@ package com.ohua_blog.functions;
 import com.ohua.lang.Function;
 import com.ohua_blog.types.FetchType;
 import com.ohua_blog.types.PostInfo;
-import ohua_blog.render.Render;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by justusadam on 13/01/16.
  */
 public class Fetch {
 
-    private static void __test () {
-        Render r = new Render();
-        r.renderMainPane(new ArrayList<>());
-    }
-
     private static HashMap<Integer, PostInfo> postMap;
     private static HashMap<Integer, Integer> viewMap;
     private static HashMap<Integer, String> contentMap;
 
     @Function
-    public Object[] fetch (FetchType type, int id) {
+    public Object[] fetch (int id, String type) {
         Object res;
         switch (type) {
-            case PostIds:
+            case "PostIds":
                 res = (Object) fetchPostIds();
                 break;
-            case PostContent:
+            case "PostContent":
                 res = (Object) fetchPostContent(id);
                 break;
-            case PostInfo:
+            case "PostInfo":
                 res = (Object) fetchPostInfo(id);
                 break;
-            case PostViews:
+            case "PostViews":
                 res = (Object) fetchPostViews(id);
                 break;
             default:

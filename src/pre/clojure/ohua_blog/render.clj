@@ -1,39 +1,42 @@
 (ns ohua-blog.render
-  (:gen-class
-    :name ohua_blog.render.Render
-    :methods
-      [
-       ;[^{com.ohua.lang.Function {}} renderTopics [Iterable] String]
-       ;[^{com.ohua.lang.Function {}} renderPostList [Iterable] String]
-       ;[^{com.ohua.lang.Function {}} renderSidePane [Iterable Iterable] String]
-       ;[^{com.ohua.lang.Function {}} renderMainPane [Iterable] String]
-       ;[^{com.ohua.lang.Function {}} renderPosts [Iterable] String]
-       [^{com.ohua.lang.Function {}} renderPage [String String] String]
-       ;[^{com.ohua.lang.Function {}} renderPopularPosts [Iterable] String]
-       ]
-      )
-  (:require [clojure.string :refer [join]])
-  (:import
-    (com.ohua.lang Function)))
+  (:require [clojure.string :refer [join capitalize]])
+  (:import [com.ohua.lang Function]))
+
+(defmacro function [name args & body]
+  `(do
+     (gen-class
+       :name ~(str "ohua_blog.render." (capitalize name))
+       :prefix "__mk_generated_"
+       :methods
+       [[~(with-meta name `{Function {}})
+         [~@(map #(get (meta %) :tag Object) (rest args))]
+         "[Ljava.lang.Object;"]])
+     (defn ~name ~args ~@body)
+     (defn ~(symbol (str "__mk_generated_" name)) ~args
+       (into-array Object ~@body))))
 
 
-(defn -renderTopics [this topics]
+(function renderTopics ^String  [this ^Iterable topics]
   (str "Topics:\n" (join "\n" (map str topics))))
 
-(defn -renderPostList [this posts]
+(function renderPostList ^String [this ^Iterable posts]
   (join "\n" (map #(str "Post " (.getId (first %))) posts)))
 
-(defn -renderSidePane [this posts topics]
+(function renderSidePane ^String [this ^Iterable posts ^Iterable topics]
   (str "Side panel\n" posts "\n" topics))
 
-(defn -renderMainPanel [this posts]
-  (str "Main panel\n" (.renderPostList this posts)))
+(function renderMainPanel ^String [this ^Iterable posts]
+  (str "Main panel\n" (renderPostList posts)))
 
-(defn -renderPosts [this posts]
-  (.renderPostList this posts))
+(function renderPosts ^String [this ^Iterable posts]
+  (renderPostList posts))
 
-(defn -renderPage [this pane content]
+(function renderPage ^String [this ^Object pane ^Object content]
   (str pane "\n" content))
 
-(defn -renderPopularPosts [this posts]
+(function renderPopularPosts ^String [this ^Iterable posts]
   (join "\n" (map (fn [[[info content] views]] (str (.getId info) " Views: " views)) posts)))
+
+;(use 'clojure.pprint)
+;(pprint (macroexpand '(function statefulFunction ^String [^String a ^Iterable b ^Object c]
+;  nil)))
