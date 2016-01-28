@@ -29,30 +29,34 @@
                        views-and-posts (zip pids views)
                        ordered (order-posts views-and-posts)
                        ordered-ids (unzip-first ordered)
-                       content-only (com.ohua.lang/smap
-                                      (fn [a] (fetch a "PostContent"))
-                                      ordered-ids)
-                       content (zip content-only ordered-ids)]
-                   (render-popular-posts content))
+                       content (com.ohua.lang/smap
+                                 (fn [a] (fetch a "PostContent"))
+                                 ordered-ids)
+                       info (com.ohua.lang/smap
+                                 (fn [a] (fetch a "PostInfo"))
+                                 ordered-ids)
+                       package (zip3 views info content)]
+                   (render-popular-posts package))
                  (let [pids (fetch id "PostIds")
                        posts (com.ohua.lang/smap
-                               (fn [a] (fetch a "PostContent"))
+                               (fn [a] (fetch a "PostInfo"))
                                pids)
                        topic-counts (process-topics posts)]
                    (render-topics topic-counts)))
                (let [pids (fetch id "PostIds")
                      posts (com.ohua.lang/smap
-                             (fn [a] (fetch a "PostContent"))
+                             (fn [a] (fetch a "PostInfo"))
                              pids)
                      ordered (take-latest posts)
+                     ordered-ids (get-ids ordered)
                      content (com.ohua.lang/smap
                                (fn [a] (fetch a "PostContent"))
-                               ordered)]
+                               ordered-ids)]
                  (render-main-panel
                    (zip ordered content)))))
           x))))
 
 (defn -main []
   (do
-    (l/enable-compilation-logging)
+    ; (l/enable-compilation-logging)
     (m)))

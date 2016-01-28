@@ -11,6 +11,13 @@ public class PostInfo {
     private String author;
     private Date date;
 
+    public PostInfo(int id, String topic, String author, Date date) {
+      this.id = id;
+      this.topic = topic;
+      this.author = author;
+      this.date = date;
+    }
+
     public int getId() {
         return id;
     }

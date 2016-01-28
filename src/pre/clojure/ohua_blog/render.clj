@@ -22,7 +22,7 @@
   (str pane "\n" content))
 
 (aot-function renderPopularPosts ^String [this ^Iterable posts]
-  (join "\n" (map (fn [[[info content] views]] (str (.getId info) " Views: " views)) posts)))
+  (join "\n" (map (fn [[views info content]] (str " Views: " views "Content:" content)) posts)))
 ;
 ; (use 'clojure.pprint)
 ; (use 'clojure.walk)

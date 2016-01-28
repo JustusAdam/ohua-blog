@@ -7,6 +7,7 @@ import com.ohua_blog.types.PostInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Created by justusadam on 13/01/16.
@@ -14,9 +15,15 @@ import java.util.List;
 public class Fetch {
 
     // TODO initialize these maps with dummy values
-    private static HashMap<Integer, PostInfo> postMap;
-    private static HashMap<Integer, Integer> viewMap;
-    private static HashMap<Integer, String> contentMap;
+    private final static HashMap<Integer, PostInfo> postMap = new HashMap<>();
+    private final static HashMap<Integer, Integer> viewMap = new HashMap<>();
+    private final static HashMap<Integer, String> contentMap = new HashMap<>();
+
+    static {
+      postMap.put(1, new PostInfo(1, "foo", "bar", new Date()));
+      viewMap.put(1, 5);
+      contentMap.put(1, "No content");
+    }
 
     @Function
     public Object[] fetch (int id, String type) {
