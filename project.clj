@@ -6,6 +6,7 @@
   :plugins [[lein2-eclipse "2.0.0" :exclusions [[org.codehaus.plexus/plexus-utils]]]]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [ohua/ohua "0.4.1"]]
+
   :main ^:skip-aot ohua-blog.core
   :target-path "target/%s"
 

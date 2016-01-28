@@ -13,3 +13,5 @@ pom.xml.asc
 
 /.idea
 /ohua-blog.iml
+.DS_Store
+*.dot
