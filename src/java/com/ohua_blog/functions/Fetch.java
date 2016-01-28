@@ -13,28 +13,30 @@ import java.util.List;
  */
 public class Fetch {
 
+    // TODO initialize these maps with dummy values
     private static HashMap<Integer, PostInfo> postMap;
     private static HashMap<Integer, Integer> viewMap;
     private static HashMap<Integer, String> contentMap;
 
     @Function
     public Object[] fetch (int id, String type) {
+        FetchType t = FetchType.valueOf(type);
         Object res;
-        switch (type) {
-            case "PostIds":
+        switch (t) {
+            case PostIds:
                 res = (Object) fetchPostIds();
                 break;
-            case "PostContent":
+            case PostContent:
                 res = (Object) fetchPostContent(id);
                 break;
-            case "PostInfo":
+            case PostInfo:
                 res = (Object) fetchPostInfo(id);
                 break;
-            case "PostViews":
+            case PostViews:
                 res = (Object) fetchPostViews(id);
                 break;
             default:
-                res = null;
+                throw new IllegalStateException();
         }
         return new Object[] { res };
     }

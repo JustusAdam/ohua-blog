@@ -16,8 +16,7 @@
 (set! (. com.ohua.engine.utils.GraphVisualizer PRINT_FLOW_GRAPH) (str "nested-smap-exec-flow1"))
 
 (defmacro m []
-  '(let [x [2]]
-     (println "hallo")
+  '(let [x [(int 2)]]
      (com.ohua.compile/ohua
         (com.ohua.lang/smap
           (fn [id]
@@ -41,7 +40,7 @@
                                pids)
                        topic-counts (process-topics posts)]
                    (render-topics topic-counts)))
-               (let [pids (fetch "PostIds" id)
+               (let [pids (fetch id "PostIds")
                      posts (com.ohua.lang/smap
                              (fn [a] (fetch a "PostContent"))
                              pids)
