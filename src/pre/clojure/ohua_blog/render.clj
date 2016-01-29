@@ -9,14 +9,14 @@
 (aot-function renderPostList ^String [this ^Iterable posts]
   (join "\n" (map #(str "Post " (.getId (first %))) posts)))
 
-(aot-function renderSidePane ^String [this ^Iterable posts ^Iterable topics]
+(aot-function renderSidePane ^String [this ^Object posts ^Object topics]
   (str "Side panel\n" posts "\n" topics))
 
 (aot-function renderMainPanel ^String [this ^Iterable posts]
-  (str "Main panel\n" (renderPostList posts)))
+  (str "Main panel\n" (renderPostList this posts)))
 
 (aot-function renderPosts ^String [this ^Iterable posts]
-  (renderPostList posts))
+  (renderPostList this posts))
 
 (aot-function renderPage ^String [this ^Object pane ^Object content]
   (str pane "\n" content))

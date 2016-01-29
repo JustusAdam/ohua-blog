@@ -6,9 +6,7 @@
   (frequencies (map (fn [a] (.getTopic a)) posts)))
 
 (aot-function orderPosts [this ^Iterable views]
-  (do
-    (println views)
-    (into [] (take 5 (sort-by last > views)))))
+  (into [] (take 5 (sort-by last > views))))
 
 (aot-function zip ^Iterable [this ^Iterable a ^Iterable b]
   (into [] (map vector a b)))
@@ -18,10 +16,7 @@
 
 (aot-function takeLatest [this ^Iterable posts]
   (let [res (take 5 (sort-by (fn [post] (.getDate post)) posts))]
-    (println "type of posts =" (type posts) "type of individual post =" (type (first posts)))
-    (println res)
     res))
-
 
 (aot-function getId [this ^Object o]
   (.getId o))
@@ -31,3 +26,7 @@
 
 (aot-function getIds [this ^Iterable a]
   (map #(.getId %) a))
+
+(aot-function p [this a]
+  (println a)
+  a)
