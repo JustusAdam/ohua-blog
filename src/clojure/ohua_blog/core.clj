@@ -20,40 +20,41 @@
      (com.ohua.compile/ohua
         (com.ohua.lang/smap
           (fn [id]
-             (render-page
-               (render-side-pane
-                 (let [pids (fetch id "PostIds")
-                       views (com.ohua.lang/smap
-                               (fn [post] (fetch post "PostViews"))
-                               pids)
-                       views-and-posts (zip pids views)
-                       ordered (order-posts views-and-posts)
-                       ordered-ids (unzip-first ordered)
-                       content (com.ohua.lang/smap
-                                 (fn [a] (fetch a "PostContent"))
-                                 ordered-ids)
-                       info (com.ohua.lang/smap
+             (p
+               (render-page
+                 (render-side-pane
+                   (let [pids (fetch id "PostIds")
+                         views (com.ohua.lang/smap
+                                 (fn [post] (fetch post "PostViews"))
+                                 pids)
+                         views-and-posts (zip pids views)
+                         ordered (order-posts views-and-posts)
+                         ordered-ids (unzip-first ordered)
+                         content (com.ohua.lang/smap
+                                   (fn [a] (fetch a "PostContent"))
+                                   ordered-ids)
+                         info (com.ohua.lang/smap
+                                   (fn [a] (fetch a "PostInfo"))
+                                   ordered-ids)
+                         package (zip3 views info content)]
+                     (render-popular-posts package))
+                   (let [pids (fetch id "PostIds")
+                         posts (com.ohua.lang/smap
                                  (fn [a] (fetch a "PostInfo"))
-                                 ordered-ids)
-                       package (zip3 views info content)]
-                   (render-popular-posts package))
+                                 pids)
+                         topic-counts (process-topics posts)]
+                     (render-topics topic-counts)))
                  (let [pids (fetch id "PostIds")
                        posts (com.ohua.lang/smap
                                (fn [a] (fetch a "PostInfo"))
                                pids)
-                       topic-counts (process-topics posts)]
-                   (render-topics topic-counts)))
-               (let [pids (fetch id "PostIds")
-                     posts (com.ohua.lang/smap
-                             (fn [a] (fetch a "PostInfo"))
-                             pids)
-                     ordered (take-latest posts)
-                     ordered-ids (get-ids ordered)
-                     content (com.ohua.lang/smap
-                               (fn [a] (fetch a "PostContent"))
-                               ordered-ids)]
-                 (render-main-panel
-                   (zip ordered content)))))
+                       ordered (take-latest posts)
+                       ordered-ids (get-ids ordered)
+                       content (com.ohua.lang/smap
+                                 (fn [a] (fetch a "PostContent"))
+                                 ordered-ids)]
+                   (render-main-panel
+                     (zip ordered content))))))
           x))))
 
 (defn -main []
