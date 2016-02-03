@@ -15,3 +15,4 @@ pom.xml.asc
 /ohua-blog.iml
 .DS_Store
 *.dot
+/bin/

@@ -8,10 +8,10 @@
   (into [] (take 5 (sort-by last > views))))
 
 (aot-function zip ^Iterable [^Iterable a ^Iterable b]
-  (into [] (map vector a b)))
+  (map vector a b))
 
 (aot-function unzipFirst [l]
-  (into [] (map (fn [[a b]] a) l)))
+  (map (fn [[a b]] a) l))
 
 (aot-function takeLatest [^Iterable posts]
   (let [res (take 5 (sort-by (fn [post] (.getDate post)) posts))]
