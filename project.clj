@@ -22,7 +22,7 @@
   :java-source-paths ["src/java"]
   :test-paths ["test/clojure"]
 
-  ;:resource-paths ["resources/ohua-0.4.3-SNAPSHOT.jar"]
+  :resource-paths ["resources/ohua-0.4.4-SNAPSHOT.jar"]
 
   ; required for safety analysis of Ohua
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options" "-g"]
